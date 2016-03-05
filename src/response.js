@@ -6,6 +6,6 @@ export default class Response {
   }
 
   json() {
-    return JSON.prase(this.responseText);
+    return JSON.parse(this.responseText);
   }
 }
