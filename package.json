@@ -1,6 +1,6 @@
 {
   "name": "httpi",
-  "description": "A simple http client",
+  "description": "A http client",
   "version": "0.1.0",
   "author": "Orbin",
   "keywords": [
