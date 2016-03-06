@@ -87,6 +87,25 @@ describe("http client", () => {
     });
   });
 
+  it("should set body", (done) => {
+    let result;
+
+    const body = {
+      "a": "b",
+      "c": "d"
+    };
+
+    const originalSend = XHR.prototype.send;
+    XHR.prototype.send = function(value) {
+      result = value;
+      originalSend.call(this);
+    };
+
+    http.post("/hello", body).then(() => {
+      result.should.deep.equal(body);
+    }).then(done).catch(done);
+  });
+
   describe("interceptors", () => {
     describe("on success", () => {
       it("it should call all response interceptors", (done) => {

@@ -35,7 +35,7 @@ export default class HttpClient {
         xhr.setRequestHeader(header, this.headers[header]);
       }
 
-      xhr.send(options.data);
+      xhr.send(options.body);
     });
 
     for (let interceptor of this.interceptors) {
