@@ -132,7 +132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }
 	        }
 
-	        xhr.send(options.data);
+	        xhr.send(options.body);
 	      });
 
 	      var _iteratorNormalCompletion2 = true;
@@ -204,7 +204,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Response, [{
 	    key: "json",
 	    value: function json() {
-	      return JSON.prase(this.responseText);
+	      return JSON.parse(this.responseText);
 	    }
 	  }]);
 
