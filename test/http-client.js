@@ -1,5 +1,6 @@
 import chai from "chai";
 import HttpClient from "../src/http-client";
+import Headers from "../src/headers";
 
 const should = chai.should();
 
@@ -59,19 +60,21 @@ describe("http client", () => {
 
 
   it("should set headers", (done) => {
-    const headers = {};
+    const result = {};
 
-    http.headers = {
-      "a": "b",
-      "c": "d"
+    const headers = {
+      "Authorization": "Bearer 1234",
+      "Content-Type": "application/json"
     };
 
+    http.headers = new Headers(headers);
+
     XHR.prototype.setRequestHeader = function(key, value) {
-      headers[key] = value;
+      result[key] = value;
     };
 
     http.post("/hello").then(() => {
-      headers.should.deep.equal(http.headers);
+      result.should.deep.equal(headers);
     }).then(done).catch(done);
   });
 
@@ -102,7 +105,7 @@ describe("http client", () => {
     };
 
     http.post("/hello", body).then(() => {
-      result.should.deep.equal(body);
+      result.should.deep.equal(JSON.stringify(body));
     }).then(done).catch(done);
   });
 

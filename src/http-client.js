@@ -1,10 +1,11 @@
 import Response from "./response";
+import Headers from "./headers";
 
 export default class HttpClient {
   constructor(options) {
     options = options || {};
     this.baseUrl = options.baseUrl || "";
-    this.headers = options.headers || {};
+    this.headers = new Headers(options.headers || {});
     this.interceptors = [];
   }
 
@@ -12,8 +13,9 @@ export default class HttpClient {
     const promise = new Promise((resolve, reject) => {
       const xhr = new window.XMLHttpRequest();
 
-      xhr.onload = (e) => {
-        const response = new Response(e);
+      xhr.onload = function() {
+        const response = new Response(this);
+
         if (response.isSuccess) {
           resolve(response);
         } else {
@@ -21,21 +23,25 @@ export default class HttpClient {
         }
       };
 
-      xhr.onerror = (e) => {
-        reject(new Response(e));
+      xhr.onerror = function() {
+        reject(new Response(this));
       };
 
-      xhr.ontimeout = (e) => {
-        reject(new Response(e));
+      xhr.ontimeout = function() {
+        reject(new Response(this));
       };
 
       xhr.open(options.method, this.baseUrl + options.url, true);
 
-      for (let header of Object.keys(this.headers)) {
-        xhr.setRequestHeader(header, this.headers[header]);
+      this.headers.forEach((value, name) => {
+        xhr.setRequestHeader(name, value);
+      });
+
+      if (!this.headers.has("Content-Type")) {
+        xhr.setRequestHeader("Content-Type", "application/json");
       }
 
-      xhr.send(options.body);
+      xhr.send(options.body ? JSON.stringify(options.body) : null);
     });
 
     for (let interceptor of this.interceptors) {
